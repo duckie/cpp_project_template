@@ -1,0 +1,9 @@
+You need CMake and OpenCV (dev version)
+
+To compile and launch :
+
+mkdir build
+cd build
+cmake ../
+make
+./src/opencvtest
