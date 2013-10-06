@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 include(CheckIncludeFileCXX)
 
 project (CppProject)
@@ -12,6 +12,9 @@ endif(CMAKE_COMPILER_IS_GNUCC)
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
 endif(CMAKE_COMPILER_IS_GNUCXX)
+
+# C++11
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Loading user config
 include(config.cmake)

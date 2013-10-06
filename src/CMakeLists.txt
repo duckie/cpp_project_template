@@ -34,7 +34,7 @@ if(Boost_USE)
 endif()
 
 ### Browsing source files ###
-file(GLOB SRCS_FILES *.cpp)
+file(GLOB SRCS_FILES *.cc)
 
 ### Exe ###
 add_executable(${PROJECT_NAME} ${SRCS_FILES}) 
