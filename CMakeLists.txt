@@ -1,38 +1,25 @@
-cmake_minimum_required (VERSION 2.6)
-include(CheckIncludeFileCXX)
-
-project (CppProject)
+cmake_minimum_required (VERSION 2.8)
+project (cppproject)
+enable_testing()
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-# Making more readable error messages in eclipse
-if(CMAKE_COMPILER_IS_GNUCC)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
-endif(CMAKE_COMPILER_IS_GNUCC)
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
-endif(CMAKE_COMPILER_IS_GNUCXX)
+# C++11 is a requirement here
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag(-std=c++11 HAVE_STD_CPP11_FLAG)
+if (HAVE_STD_CPP11_FLAG)
+  message("-- C++11 support found.")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
+  message(FATAL_ERROR "Your compiler must support C++11 to compile ${PROJECT_NAME}.")
+endif()
 
 # Loading user config
-include(config.cmake)
-
-# Detecting platform
-STRING(COMPARE EQUAL ${CMAKE_SYSTEM_NAME} "Windows" COMPILE_ON_WINDOWS)
-STRING(COMPARE EQUAL ${CMAKE_SYSTEM_NAME} "Linux" COMPILE_ON_LINUX)
-
-if(COMPILE_ON_WINDOWS)
-    set(${WINDOWS} ON)
-endif()
-
-if(COMPILE_ON_LINUX)
-    set(${UNIX} ON)
-endif()
-
-# Centralized version number
-include (version.cmake)
-message (STATUS "*** Building ${PROJECT_NAME} ${PROJECT_VERSION} ***")
-message (STATUS "${CMAKE_SYSTEM_NAME} detected")
+set(OpenCV_USER FALSE)
+set(Boost_USE FALSE)
+set(Boost_COMPONENTS "")
 
 # Main source directory
 add_subdirectory (src)
+add_subdirectory (test)
 

@@ -1,9 +1,11 @@
 configure_file(config.h.cmake config.h)
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src 
-    ${PROJECT_BINARY_DIR}/src
-	)
+  ${PROJECT_SOURCE_DIR}/includes/
+  ${PROJECT_BINARY_DIR}/includes/
+  ${PROJECT_SOURCE_DIR}/src 
+  ${PROJECT_BINARY_DIR}/src
+  )
 
 set(LIBRARIES)
 
@@ -34,10 +36,13 @@ if(Boost_USE)
 endif()
 
 ### Browsing source files ###
-file(GLOB SRCS_FILES *.cpp)
+file(GLOB lib_srcs *.cc)
+list(REMOVE_ITEM lib_srcs "${PROJECT_SOURCE_DIR}/src/main.cc")
+message(${lib_srcs})
 
 ### Exe ###
-add_executable(${PROJECT_NAME} ${SRCS_FILES}) 
+add_library(${PROJECT_NAME} OBJECT ${lib_srcs})
+add_executable(launch-${PROJECT_NAME} main.cc $<TARGET_OBJECTS:${PROJECT_NAME}>)
 
 ### Linking ###
-target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+target_link_libraries(launch-${PROJECT_NAME} ${LIBRARIES})
