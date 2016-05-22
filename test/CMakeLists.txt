@@ -1,28 +1,23 @@
-Find_Package(GTest REQUIRED)
-
 include_directories(
-  ${PROJECT_SOURCE_DIR}/includes/
-  ${PROJECT_SOURCE_DIR}/src/
-  ${PROJECT_SOURCE_DIR}/test/
-  ${PROJECT_BINARY_DIR}/includes/
-  ${PROJECT_BINARY_DIR}/src/
-  ${PROJECT_BINARY_DIR}/test/
-  ${GTEST_INCLUDE_DIRS}
+  ${PROJECT_SOURCE_DIR}/3rdparty/catch
 )
 
-add_library(test-main OBJECT test-main.cc)
+add_library(catch_main OBJECT catch_main.cc)
+set(catch_exe_source_list)
 add_custom_target(build-test)
-
-function(add_cc_test name)
-  if("${ARGV1}" STREQUAL "GT")
-    add_executable(${name} ${name}.cc $<TARGET_OBJECTS:test-main> $<TARGET_OBJECTS:${PROJECT_NAME}>)
+macro(add_project_test name)
+  if("${ARGV1}" STREQUAL "CATCH")
+    list(APPEND catch_exe_source_list ${name}.cc)
   else()
-    add_executable(${name} ${name}.cc $<TARGET_OBJECTS:${PROJECT_NAME}>)
+    add_executable(${name} ${name}.cc)
+    target_link_libraries(${name} lib${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+    add_dependencies(build-test ${name})
+    add_test(${name} ${name})  
   endif()
-  target_link_libraries(${name} ${GTEST_LIBRARIES})
-  add_dependencies(build-test ${name})
-  add_test(${name} ${name})  
-endfunction()
+endmacro()
 
-add_cc_test(test1 GT)
+add_project_test(test1 CATCH)
+
+add_executable(unit_tests ${catch_exe_source_list} $<TARGET_OBJECTS:catch_main>)
+target_link_libraries(unit_tests lib${PROJECT_NAME})
 

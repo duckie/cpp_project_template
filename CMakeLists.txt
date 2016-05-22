@@ -1,25 +1,100 @@
+# Version guard
 cmake_minimum_required (VERSION 2.8)
+
+# Cmake modules
+include(CheckCXXSourceCompiles)
+include(CheckCXXCompilerFlag)
+
+# Project configuration
 project (cppproject)
 enable_testing()
-
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-# C++11 is a requirement here
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag(-std=c++11 HAVE_STD_CPP11_FLAG)
-if (HAVE_STD_CPP11_FLAG)
-  message("-- C++11 support found.")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# Check for C++11/14 support
+if (NOT MSVC)
+  # Tests for Clang and GCC
+  check_cxx_compiler_flag(-std=c++1y CPP14_SUPPORT)
+  if (CPP14_SUPPORT)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
+    message("-- C++14 support found.")
+  else()
+    check_cxx_compiler_flag(-std=c++11 CPP11_SUPPORT)
+    if (CPP11_SUPPORT)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+      message("-- C++11 support found.")
+    endif()
+  endif()
 else()
-  message(FATAL_ERROR "Your compiler must support C++11 to compile ${PROJECT_NAME}.")
+  # Tests for MSVC
+  check_cxx_source_compiles("#include <utility>\nusing std::integer_sequence;\n int main(){return 0;}" CPP14_SUPPORT)
+  if (CPP14_SUPPORT)
+    message("-- C++14 support found.")
+  else()
+    check_cxx_source_compiles("static constexpr int TEST=0;\n int main(){return 0;}" CPP11_SUPPORT)
+    if (CPP11_SUPPORT)
+      message("-- C++11 support found.")
+    endif()
+  endif ()
 endif()
 
-# Loading user config
-set(OpenCV_USER FALSE)
-set(Boost_USE FALSE)
-set(Boost_COMPONENTS "")
+## Snippets to enforce a C++ version
+#if (not CPP14_SUPPORT)
+#  message(FATAL_ERROR "C++14 support is required.")
+#endif()
+#if (not CPP11_SUPPORT)
+#  message(FATAL_ERROR "C++11 support is required.")
+#endif()
 
-# Main source directory
+# Trace compilation for tools (ex: YouCompleteMe)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_DIR}/BuildConfig.json)
+
+
+# clang-format
+file(GLOB_RECURSE srcs_to_format src/*.cc)
+file(GLOB_RECURSE headers_to_format include/*.h)
+file(GLOB_RECURSE private_headers_to_format src/*.h)
+add_custom_target(format
+  clang-format -i ${srcs_to_format} ${headers_to_format} ${private_headers_to_format}
+  VERBATIM
+)
+
+## Dependencies snippets ##
+
+set(LIBRARIES)
+
+## OpenCV support
+#if(OpenCV_USE)
+#    find_package(OpenCV REQUIRED)
+#    if(OpenCV_FOUND)
+#        include_directories(${OpenCV_INCLUDE_DIRS})
+#        set(LIBRARIES "${LIBRARIES}" "${OpenCV_LIBS}")
+#    endif()
+#endif()
+
+## Boost support
+#if(Boost_USE)
+#    find_package(Boost COMPONENTS ${Boost_COMPONENTS} REQUIRED)
+#    if(Boost_FOUND)
+#	    include_directories(${Boost_INCLUDE_DIRS})
+#        if(CMAKE_COMPILER_IS_GNUCXX)
+#            set(LIBRARIES "${LIBRARIES}" "${Boost_LIBRARIES}")
+#        else()
+#            link_directories(${Boost_LIBRARY_DIRS})
+#        endif()
+#    endif()
+#endif()
+
+include_directories(
+  ${PROJECT_SOURCE_DIR}/includes/
+  ${PROJECT_BINARY_DIR}/includes/
+  ${PROJECT_SOURCE_DIR}/src 
+  ${PROJECT_BINARY_DIR}/src
+  )
+
+### MANUAL_INCLUDE_DIRS is useful to force ides to find some includes (useless for compilation) ###
+### To be used by editing the cache manually
+include_directories(${MANUAL_INCLUDE_DIRS})
+
 add_subdirectory (src)
 add_subdirectory (test)
-

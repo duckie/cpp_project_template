@@ -1,13 +1,8 @@
-#include <gtest/gtest.h>
-#include <project.h>
+#include "catch.hpp"
+#include "cppproject.h"
 
-class UnitTests : public ::testing::Test {
- protected:
-   int fixture = 1;
-};
-
-TEST_F(UnitTests, Test1) {
-  EXPECT_EQ(1, fixture);
-  EXPECT_EQ("Hello guys !", project::function());
+TEST_CASE("Project", "[project]") {
+  SECTION("section") {
+    REQUIRE(cppproject::api() == true);
+  }
 }
-
