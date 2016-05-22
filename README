@@ -1,8 +1,0 @@
-
-To compile and launch :
-
-mkdir build
-cd build
-cmake ../
-make
-./src/CppProject
