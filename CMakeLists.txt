@@ -26,6 +26,8 @@ if (NOT MSVC)
   endif()
 else()
   # Tests for MSVC
+  # Unfortunately, due to various unsupported things in msvc versions,
+  # this is poor informatiion about actual support
   check_cxx_source_compiles("#include <utility>\nusing std::integer_sequence;\n int main(){return 0;}" CPP14_SUPPORT)
   if (CPP14_SUPPORT)
     message("-- C++14 support found.")
@@ -49,8 +51,7 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_DIR}/BuildConfig.json)
 
-
-# clang-format
+# Format the whole source code with clang-format
 file(GLOB_RECURSE srcs_to_format src/*.cc)
 file(GLOB_RECURSE headers_to_format include/*.h)
 file(GLOB_RECURSE private_headers_to_format src/*.h)
@@ -59,42 +60,20 @@ add_custom_target(format
   VERBATIM
 )
 
-## Dependencies snippets ##
-
-set(LIBRARIES)
-
-## OpenCV support
-#if(OpenCV_USE)
-#    find_package(OpenCV REQUIRED)
-#    if(OpenCV_FOUND)
-#        include_directories(${OpenCV_INCLUDE_DIRS})
-#        set(LIBRARIES "${LIBRARIES}" "${OpenCV_LIBS}")
-#    endif()
-#endif()
-
-## Boost support
-#if(Boost_USE)
-#    find_package(Boost COMPONENTS ${Boost_COMPONENTS} REQUIRED)
-#    if(Boost_FOUND)
-#	    include_directories(${Boost_INCLUDE_DIRS})
-#        if(CMAKE_COMPILER_IS_GNUCXX)
-#            set(LIBRARIES "${LIBRARIES}" "${Boost_LIBRARIES}")
-#        else()
-#            link_directories(${Boost_LIBRARY_DIRS})
-#        endif()
-#    endif()
-#endif()
-
-include_directories(
-  ${PROJECT_SOURCE_DIR}/includes/
-  ${PROJECT_BINARY_DIR}/includes/
-  ${PROJECT_SOURCE_DIR}/src 
-  ${PROJECT_BINARY_DIR}/src
-  )
-
 ### MANUAL_INCLUDE_DIRS is useful to force ides to find some includes (useless for compilation) ###
 ### To be used by editing the cache manually
 include_directories(${MANUAL_INCLUDE_DIRS})
 
-add_subdirectory (src)
-add_subdirectory (test)
+macro(enable_3rdparty name)
+  add_subdirectory(3rdparty/${name})
+endmacro(enable_3rdparty)
+
+enable_3rdparty(catch)
+
+macro(enable_module name)
+  add_subdirectory(src/${name})
+endmacro(enable_module)
+
+enable_module(projectlib)
+#enable_module(projectrun)
+

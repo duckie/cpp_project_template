@@ -1,8 +1,8 @@
 #include "catch.hpp"
-#include "cppproject.h"
+#include "project.h"
 
 TEST_CASE("Project", "[project]") {
   SECTION("section") {
-    REQUIRE(cppproject::api() == true);
+    REQUIRE(project::api() == true);
   }
 }
