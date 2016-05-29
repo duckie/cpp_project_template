@@ -70,10 +70,15 @@ endmacro(enable_3rdparty)
 
 enable_3rdparty(catch)
 
+# By default we put binaries into this directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+
 macro(enable_module name)
   add_subdirectory(src/${name})
 endmacro(enable_module)
 
+enable_module(testlib)
 enable_module(projectlib)
-#enable_module(projectrun)
+enable_module(projectrun)
 

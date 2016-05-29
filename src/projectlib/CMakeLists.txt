@@ -25,10 +25,10 @@ set(CURRENT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/
 #endif()
 
 # Import configuration options into code
-include_directories(${CURRENT_INCLUDES})
 configure_file(includes/config.h.cmake config.h)
 file(GLOB lib_sources src/*.cc)
 add_library(${PROJECT_NAME} ${lib_sources})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CURRENT_INCLUDES})
 
 add_subdirectory(test)

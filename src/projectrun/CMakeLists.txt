@@ -1,9 +1,5 @@
-# Import configuration options into code
-configure_file(config.h.cmake config.h)
+file(GLOB srcs *.cc)
+list(REMOVE_ITEM srcs "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cc")
 
-
-file(GLOB lib_srcs *.cc)
-list(REMOVE_ITEM lib_srcs "${PROJECT_SOURCE_DIR}/src/main.cc")
-
-add_library(lib${PROJECT_NAME} ${lib_srcs})
-target_link_libraries(lib${PROJECT_NAME} ${LIBRARIES})
+add_executable(run${PROJECT_NAME} src/main.cc ${srcs})
+target_link_libraries(run${PROJECT_NAME} ${PROJECT_NAME})
