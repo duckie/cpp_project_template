@@ -1,10 +1,6 @@
 ## Dependencies snippets ##
 
 set(LIBRARIES)
-set(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
-set(CURRENT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CMAKE_CURRENT_BINARY_DIR}/includes)
-set(CURRENT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 ## OpenCV support
 #find_package(OpenCV REQUIRED)
@@ -25,10 +21,10 @@ set(CURRENT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/
 #endif()
 
 # Import configuration options into code
-configure_file(includes/config.h.cmake config.h)
+configure_file(projectlib/config.h.cmake config.h)
 file(GLOB lib_sources src/*.cc)
 add_library(${PROJECT_NAME} ${lib_sources})
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CURRENT_INCLUDES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(test)

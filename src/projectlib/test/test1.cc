@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "project.h"
+#include "projectlib/project.h"
 
 TEST_CASE("Project", "[project]") {
   SECTION("section") {
