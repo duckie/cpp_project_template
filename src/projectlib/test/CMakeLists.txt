@@ -1,5 +1,3 @@
-#add_library(catch_main catch_main.cc)
-#target_link_libraries(catch_main catch)
 set(catch_exe_source_list)
 add_custom_target(build-test)
 macro(add_project_test name)
@@ -13,9 +11,11 @@ macro(add_project_test name)
   endif()
 endmacro()
 
+# Reference test sources
 add_project_test(test1 CATCH)
 
+# Create main test executable
 add_executable(unit_tests ${catch_exe_source_list})
 target_link_libraries(unit_tests ${PROJECT_NAME} testlib catch)
 add_dependencies(build-test unit_tests)
-add_test(lib${PROJECT_NAME}_unit_tests unit_tests)
+add_test(lib${PROJECT_NAME}_unit_tests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/unit_tests)
