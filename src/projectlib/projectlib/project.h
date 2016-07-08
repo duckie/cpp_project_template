@@ -2,8 +2,8 @@
 #define PROJECT_HEADER_
 
 namespace project {
-  /// \brief Returns true
-  bool api();
+/// \brief Returns true
+bool api();
 }  // namespace cppproject
 
 #endif  // PROJECT_HEADER_
