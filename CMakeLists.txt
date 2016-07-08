@@ -66,19 +66,17 @@ add_custom_target(format
 ### To be used by editing the cache manually
 include_directories(${MANUAL_INCLUDE_DIRS})
 
-
 enable_3rdparty(catch)
 
 # By default we put binaries into this directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-
 enable_module(testlib)
 enable_module(projectlib)
 enable_module(projectrun)
 
-# Source wide utilities
+# Proiect wide utilities
 
 # clang-format
 
