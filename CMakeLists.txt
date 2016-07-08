@@ -1,3 +1,8 @@
+# C++ Project template
+#
+# Proudly bootstrapped by git@github.com:duckie/cpp_project_template.git
+#
+
 # Version guard
 cmake_minimum_required (VERSION 2.8)
 
@@ -66,15 +71,15 @@ add_custom_target(format
 ### To be used by editing the cache manually
 include_directories(${MANUAL_INCLUDE_DIRS})
 
-enable_3rdparty(catch)
+project_add_3rdparty(catch)
 
 # By default we put binaries into this directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-enable_module(testlib)
-enable_module(projectlib)
-enable_module(projectrun)
+project_add_module(testlib)
+project_add_module(projectlib)
+project_add_module(projectrun)
 
 # Proiect wide utilities
 
