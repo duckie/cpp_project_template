@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 2.8)
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(GlobalMacros)
+include(ProjectGlobalMacros)
 
 # Project configuration
 project (cppproject)
