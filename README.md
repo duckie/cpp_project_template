@@ -1,7 +1,7 @@
-Cpp project template
+C++ project template
 ====================
 
-This is a layout to bootstrap a complete C++ project with several modules and test code. The directory layout looks over engineered for so small a source code, but it aims at being able to scale with a lot of files, modules and 3rdparties while avoiding clutter and name conflicts.
+This is a layout to bootstrap a complete C++ project with several modules, test code and various tooling to help development. The directory layout looks over engineered for so small a source code, but it aims at being able to scale with a lot of files, modules and 3rdparties while avoiding clutter and name conflicts.
 
 The actual source has three modules:
 * *projectlib* is the business code of a library, with public headers and compilation units. The `projectlib` directory name is replicated for public headers to keep consistency with system wide deployment through a package.
