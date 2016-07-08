@@ -4,10 +4,10 @@ compiler:
   - gcc
 
 before_script:
-  - export CXX=${COMPILER}
   - cd ${TRAVIS_BUILD_DIR}
-  - cmake -Hprojects/CMake -BBuild -DCMAKE_BUILD_TYPE=Release
+  - mkdir Build
   - cd Build
+  - cmake ..
 
 script:
   - make -j2
