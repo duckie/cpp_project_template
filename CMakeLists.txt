@@ -4,6 +4,8 @@ cmake_minimum_required (VERSION 2.8)
 # Cmake modules
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(GlobalMacros)
 
 # Project configuration
 project (cppproject)
@@ -64,9 +66,6 @@ add_custom_target(format
 ### To be used by editing the cache manually
 include_directories(${MANUAL_INCLUDE_DIRS})
 
-macro(enable_3rdparty name)
-  add_subdirectory(3rdparty/${name})
-endmacro(enable_3rdparty)
 
 enable_3rdparty(catch)
 
@@ -74,11 +73,12 @@ enable_3rdparty(catch)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-macro(enable_module name)
-  add_subdirectory(src/${name})
-endmacro(enable_module)
 
 enable_module(testlib)
 enable_module(projectlib)
 enable_module(projectrun)
+
+# Source wide utilities
+
+# clang-format
 
