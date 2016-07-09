@@ -1,6 +1,9 @@
 C++ project template
 ====================
 
+[![Travis CI Build Status](https://api.travis-ci.org/duckie/cpp_project_template.svg?branch=master)](https://travis-ci.org/duckie/cpp_project_template)
+
+
 This is a layout to bootstrap a complete C++ project with several modules, test code and various tooling to help development. The directory layout looks over engineered for so small a source code, but it aims at being able to scale with a lot of files, modules and 3rdparties while avoiding clutter and name conflicts.
 
 The actual source has three modules:
