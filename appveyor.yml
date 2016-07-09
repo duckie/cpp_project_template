@@ -1,0 +1,28 @@
+# branches to build
+branches:
+  # whitelist
+  only:
+    - master
+
+# Operating system (build VM template)
+os: Visual Studio 2015
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  - git config --global core.autocrlf input
+
+
+# clone directory
+clone_folder: c:\projects\project
+
+platform: x64
+configuration: Release
+
+build:
+  project: ALL.vcxproj      # path to Visual Studio solution or project
+
+# scripts to run before build
+before_build:
+  - echo Running cmake...
+  - cd c:\projects\project
+  - cmake -G "Visual Studio 14 2015 Win64"
