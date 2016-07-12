@@ -22,9 +22,9 @@ install:
   - echo cmake on AppVeyor
   - cmake -version
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" amd64
-  - set PATH=c:\projects\libosmium\cmake-3.1.0-win32-x86\bin;%PATH%
-  - set LODEPSDIR=c:\projects\libosmium\libosmium-deps
-  - set PROJ_LIB=%LODEPSDIR%\proj\share
+  #- set PATH=c:\projects\libosmium\cmake-3.1.0-win32-x86\bin;%PATH%
+  #- set LODEPSDIR=c:\projects\libosmium\libosmium-deps
+  #- set PROJ_LIB=%LODEPSDIR%\proj\share
   #convert backslashes in bzip2 path to forward slashes
   #cmake cannot find it otherwise
   #- set LIBBZIP2=%LODEPSDIR%\bzip2\lib\libbz2.lib
