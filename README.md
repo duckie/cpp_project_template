@@ -2,6 +2,8 @@ C++ project template
 ====================
 
 [![Travis CI Build Status](https://api.travis-ci.org/duckie/cpp_project_template.svg?branch=master)](https://travis-ci.org/duckie/cpp_project_template)
+[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/ik18h87j8fg6s968?svg=true)](https://ci.appveyor.com/project/duckie/cpp-project-template)
+
 
 
 This is a layout to bootstrap a complete C++ project with several modules, test code and various tooling to help development. The directory layout looks over engineered for so small a source code, but it aims at being able to scale with a lot of files, modules and 3rdparties while avoiding clutter and name conflicts.
