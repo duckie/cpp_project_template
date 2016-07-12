@@ -87,4 +87,4 @@ test_script:
   #    because we currently don't have spatialite support.
   - ctest --output-on-failure
     -C %config%
--E testdata-overview
+    -E testdata-overview
