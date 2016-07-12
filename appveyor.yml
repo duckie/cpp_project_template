@@ -58,8 +58,7 @@ build_script:
     #-DZLIB_LIBRARY=%LODEPSDIR%\zlib\lib\zlibwapi.lib
     #-DBZIP2_LIBRARY_RELEASE=%LIBBZIP2%
     #-DCMAKE_PREFIX_PATH=%LODEPSDIR%\zlib;%LODEPSDIR%\expat;%LODEPSDIR%\bzip2;%LODEPSDIR%\geos;%LODEPSDIR%\gdal;%LODEPSDIR%\proj;%LODEPSDIR%\sparsehash;%LODEPSDIR%\wingetopt
-  - dir
-  #- msbuild libosmium.sln /p:Configuration=%config% /toolsversion:14.0 /p:Platform=x64 /p:PlatformToolset=v140
+  - msbuild cppproject.sln /p:Configuration=%config% /toolsversion:14.0 /p:Platform=x64 /p:PlatformToolset=v140
   #- cmake .. -LA -G "NMake Makefiles"
   #  -DOsmium_DEBUG=TRUE
   #  -DCMAKE_BUILD_TYPE=%config%
