@@ -50,6 +50,7 @@ build_script:
   # http://stackoverflow.com/questions/661606/visual-c-how-to-disable-specific-linker-warnings
   - cmake -LA -G "Visual Studio 14 Win64"
     -DCMAKE_BUILD_TYPE=%config%
+    ..
     #-DOsmium_DEBUG=TRUE
     #-DBUILD_HEADERS=OFF
     #-DBOOST_ROOT=%LODEPSDIR%\boost
@@ -57,7 +58,6 @@ build_script:
     #-DZLIB_LIBRARY=%LODEPSDIR%\zlib\lib\zlibwapi.lib
     #-DBZIP2_LIBRARY_RELEASE=%LIBBZIP2%
     #-DCMAKE_PREFIX_PATH=%LODEPSDIR%\zlib;%LODEPSDIR%\expat;%LODEPSDIR%\bzip2;%LODEPSDIR%\geos;%LODEPSDIR%\gdal;%LODEPSDIR%\proj;%LODEPSDIR%\sparsehash;%LODEPSDIR%\wingetopt
-    ..
   - dir
   #- msbuild libosmium.sln /p:Configuration=%config% /toolsversion:14.0 /p:Platform=x64 /p:PlatformToolset=v140
   #- cmake .. -LA -G "NMake Makefiles"
