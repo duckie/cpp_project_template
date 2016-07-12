@@ -12,7 +12,7 @@ os: Visual Studio 2015
 init:
 
 # clone directory
-clone_folder: c:\projectsc\cppproject
+clone_folder: c:\projects\cppproject
 
 platform: x64
 
