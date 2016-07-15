@@ -29,6 +29,16 @@ macro(project_check_cpp_version)
   endif()
 endmacro(project_check_cpp_version)
 
+macro(project_enable_memcheck)
+  if (NOT MSVC)
+    find_program(MEMORYCHECK_COMMAND valgrind)
+    set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
+    set(MEMORYCHECK_SUPPRESSIONS_FILE "${PROJECT_SOURCE_DIR}/.valgrind_suppress.txt")
+  else()
+  endif()
+endmacro(project_enable_memcheck)
+
+
 # Add 3rdparty for main file
 macro(project_add_3rdparty name)
   add_subdirectory(3rdparty/${name})

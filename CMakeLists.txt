@@ -32,6 +32,12 @@ project_check_cpp_version()
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_DIR}/BuildConfig.json)
 
+# Add flags for coverage
+set(CMAKE_CXX_FLAGS_COVERAGE "-g -O0 -Wall --coverage") # -fprofile-arcs -ftest-coverage")
+set(CMAKE_C_FLAGS_COVERAGE "-g -O0 -Wall --coverage") # -fprofile-arcs -ftest-coverage")
+set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage") # -fprofile-arcs -ftest-coverage")
+set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "--coverage")# -fprofile-arcs -ftest-coverage")
+
 ### MANUAL_INCLUDE_DIRS is useful to force ides to find some includes (useless for compilation) ###
 ### To be used by editing the cache manually
 include_directories(${MANUAL_INCLUDE_DIRS})
