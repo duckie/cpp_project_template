@@ -63,6 +63,7 @@ before_script:
 script:
   - make -j2
   - ctest -V
+  - ./bin/projectrun
 
 after_success:
   - |

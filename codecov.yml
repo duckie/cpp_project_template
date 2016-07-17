@@ -1,0 +1,3 @@
+coverage:
+  ignore:
+    - "3rdparty/*"
