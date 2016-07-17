@@ -2,7 +2,6 @@ language: cpp
 sudo: required
 dist: trusty
 
-
 matrix:
   include:
     # 1/ Linux GCC Builds
@@ -13,7 +12,15 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5
+      env: COMPILER=g++-5 BUILD_TYPE='Release'
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5 BUILD_TYPE='Coverage'
     # 2/ Linux Clang Builds
     - compiler: clang
       addons:
@@ -23,7 +30,7 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Release'
     # 3/ OSX Clang Builds
     - os: osx
       osx_image: xcode7
@@ -51,8 +58,14 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p Build
   - cd Build
-  - cmake ..
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
   - make -j2
   - ctest -V
+
+after_success:
+  - |
+    if [[ "${BUILD_TYPE}" == "Coverage" ]]; then
+      bash <(curl -s https://codecov.io/bash)
+    fi
