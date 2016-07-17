@@ -48,3 +48,44 @@ endmacro(project_add_3rdparty)
 macro(project_add_module name)
   add_subdirectory(src/${name})
 endmacro(project_add_module)
+
+# Enable coverage
+macro(project_enable_coverage_build)
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS_COVERAGE "-g -O0 -Wall --coverage") # -fprofile-arcs -ftest-coverage")
+    set(CMAKE_C_FLAGS_COVERAGE "-g -O0 -Wall --coverage") # -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage") # -fprofile-arcs -ftest-coverage")
+    set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "--coverage")# -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
+
+    if ("${CMAKE_BUILD_TYPE}" STREQUAL "Coverage")
+      # gcov
+      find_program(GCOV_EXE gcov)
+      if (NOT ${GCOV_EXE} STREQUAL GCOV_EXE-NOTFOUND)
+        file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/gcov)
+        message("-- gcov found, coverage reports available through target 'gcov'")
+        add_custom_target(gcov
+          COMMAND find ${PROJECT_BINARY_DIR} -type f -name *.gcno -exec ${GCOV_EXE} -pb {} '\;' > ${PROJECT_BINARY_DIR}/coverage/gcov/coverage.info
+          COMMAND echo "Generated coverage report: " ${PROJECT_BINARY_DIR}/coverage/gcov/coverage.info
+          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/gcov
+          )
+      endif()
+
+      # lcov
+      find_program(LCOV_EXE lcov)
+      find_program(GENHTML_EXE genhtml)
+      if (NOT ${LCOV_EXE} STREQUAL LCOV_EXE-NOTFOUND AND NOT ${GENHTML_EXE} STREQUAL GENHTML_EXE-NOTFOUND)
+        message("-- lcov and genhtml found, html reports available through target 'lcov'")
+        file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/lcov/html)
+        add_custom_target(lcov
+          COMMAND lcov --capture --directory ${PROJECT_BINARY_DIR} --output-file coverage.info
+          COMMAND genhtml coverage.info --output-directory html
+          COMMAND echo "HTML report generated in: " ${PROJECT_BINARY_DIR}/coverage/lcov/html
+          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/lcov
+          )
+      endif()
+    endif()
+  endif()
+endmacro(project_enable_coverage_build)
+
+
