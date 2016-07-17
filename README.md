@@ -23,5 +23,6 @@ mkdir build
 cd build
 cmake ../
 make
-./src/CppProject
+ctest
+./bin/runcppproject
 ```
