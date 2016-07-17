@@ -58,6 +58,7 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p Build
   - cd Build
+  - cmake --version
   - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 
 script:
