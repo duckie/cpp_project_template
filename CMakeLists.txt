@@ -32,8 +32,9 @@ project_check_cpp_version()
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_DIR}/BuildConfig.json)
 
-# Add flags for coverage
+# Add flags for coverage and sanitizing
 project_enable_coverage_build()
+project_enable_sanitizer_build()
 
 ### MANUAL_INCLUDE_DIRS is useful to force ides to find some includes (useless for compilation) ###
 ### To be used by editing the cache manually
