@@ -32,15 +32,15 @@ matrix:
           packages:
             - g++-5
       env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="address"
-    #
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-      env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="thread"
+    # Not supported on travis, libtsan is missing
+    #- compiler: gcc
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+          #packages:
+            #- g++-5
+      #env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="thread"
     #
     - compiler: gcc
       addons:
