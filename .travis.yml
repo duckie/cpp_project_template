@@ -87,21 +87,21 @@ matrix:
       osx_image: xcode8
       compiler: clang
       env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="address"
-    #
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
+    # Currently unsupported
+    #- os: osx
+      #osx_image: xcode8
+      #compiler: clang
+      #env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
     #
     - os: osx
       osx_image: xcode8
       compiler: clang
       env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="thread"
-    #
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
+    # Should be supported but fails at link
+    #- os: osx
+      #osx_image: xcode8
+      #compiler: clang
+      #env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
