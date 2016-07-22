@@ -111,10 +111,10 @@ macro(project_enable_sanitizer_build)
       if (${SAN} STREQUAL "address"
           OR ${SAN} STREQUAL "thread"
           OR ${SAN} STREQUAL "undefined")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=${SAN} -fsanitize-blacklist=${PROJECT_BINARY_DIR}/SanitizerBlacklist.txt")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=${SAN} -fsanitize-blacklist=${PROJECT_BINARY_DIR}/SanitizerBlacklist.txt")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=${SAN}")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=${SAN}")
       else()
-        message(FATAL_ERROR "Clang sanitizer ${SAN} is unknown.")
+        message(FATAL_ERROR "GCC sanitizer ${SAN} is unknown.")
       endif()
     endif()
   endif()
