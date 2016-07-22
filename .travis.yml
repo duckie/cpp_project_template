@@ -5,6 +5,7 @@ dist: trusty
 matrix:
   include:
     # 1/ Linux GCC Builds
+    #
     - compiler: gcc
       addons:
         apt:
@@ -12,7 +13,8 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5 BUILD_TYPE='Release'
+      env: COMPILER=g++-5 BUILD_TYPE='Release' CLANG_SANITIZER=""
+    #
     - compiler: gcc
       addons:
         apt:
@@ -20,8 +22,10 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5 BUILD_TYPE='Coverage'
+      env: COMPILER=g++-5 BUILD_TYPE='Coverage' CLANG_SANITIZER=""
+
     # 2/ Linux Clang Builds
+    #
     - compiler: clang
       addons:
         apt:
@@ -30,18 +34,74 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Release'
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Release' CLANG_SANITIZER=""
+    #
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="address"
+    #
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
+    #
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="thread"
+    #
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+          packages:
+            - clang-3.8
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
+
     # 3/ OSX Clang Builds
+    #
     - os: osx
       osx_image: xcode7
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Debug'
-
+      env: COMPILER='clang++' BUILD_TYPE='Release' CLANG_SANITIZER=""
+    #
     - os: osx
       osx_image: xcode7
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Release'
-
+      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="address"
+    #
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
+    #
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="thread"
+    #
+    - os: osx
+      osx_image: xcode7
+      compiler: clang
+      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -50,7 +110,7 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       echo "Nothin"
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake ccache
+      brew install cmake
     fi
 
 before_script:
@@ -59,7 +119,7 @@ before_script:
   - mkdir -p Build
   - cd Build
   - cmake --version
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DPROJECT_BUILD_SANITIZER_TYPE=${CLANG_SANITIZER}
 
 script:
   - make -j2
