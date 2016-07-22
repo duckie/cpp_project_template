@@ -122,7 +122,7 @@ before_script:
   - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DPROJECT_BUILD_SANITIZER_TYPE=${CLANG_SANITIZER}
 
 script:
-  - make -j2
+  - make -j2 VERBOSE=1
   - ctest -V
   - ./bin/runcppproject
 
