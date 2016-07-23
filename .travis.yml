@@ -13,7 +13,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5 BUILD_TYPE='Release' CLANG_SANITIZER=""
+      env: COMPILER=g++-5 BUILD_TYPE='Release' SANITIZER=""
     #
     - compiler: gcc
       addons:
@@ -22,7 +22,34 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: COMPILER=g++-5 BUILD_TYPE='Coverage' CLANG_SANITIZER=""
+      env: COMPILER=g++-5 BUILD_TYPE='Coverage' SANITIZER=""
+    #
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="address"
+    # Not supported on travis, libtsan is missing
+    #- compiler: gcc
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+          #packages:
+            #- g++-5
+      #env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="thread"
+    #
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="undefined"
 
     # 2/ Linux Clang Builds
     #
@@ -34,7 +61,7 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Release' CLANG_SANITIZER=""
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Release' SANITIZER=""
     #
     - compiler: clang
       addons:
@@ -44,7 +71,17 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="address"
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="address"
+    # Disabled for now because of false positive and failing blacklist
+    #- compiler: clang
+      #addons:
+        #apt:
+          #sources:
+            #- ubuntu-toolchain-r-test
+            #- llvm-toolchain-precise-3.8
+          #packages:
+            #- clang-3.8
+      #env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="memory"
     #
     - compiler: clang
       addons:
@@ -54,7 +91,7 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="thread"
     #
     - compiler: clang
       addons:
@@ -64,44 +101,34 @@ matrix:
             - llvm-toolchain-precise-3.8
           packages:
             - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="thread"
-    #
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - clang-3.8
-      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
+      env: COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="undefined"
 
     # 3/ OSX Clang Builds
     #
     - os: osx
       osx_image: xcode8
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Release' CLANG_SANITIZER=""
+      env: COMPILER='clang++' BUILD_TYPE='Release' SANITIZER=""
     #
     - os: osx
       osx_image: xcode8
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="address"
+      env: COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="address"
     # Currently unsupported
     #- os: osx
       #osx_image: xcode8
       #compiler: clang
-      #env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="memory"
+      #env: COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="memory"
     #
     - os: osx
       osx_image: xcode8
       compiler: clang
-      env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="thread"
+      env: COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="thread"
     # Should be supported but fails at link
     #- os: osx
       #osx_image: xcode8
       #compiler: clang
-      #env: COMPILER='clang++' BUILD_TYPE='Debug' CLANG_SANITIZER="undefined"
+      #env: COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="undefined"
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -119,10 +146,10 @@ before_script:
   - mkdir -p Build
   - cd Build
   - cmake --version
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DPROJECT_BUILD_SANITIZER_TYPE=${CLANG_SANITIZER}
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DPROJECT_BUILD_SANITIZER_TYPE=${SANITIZER}
 
 script:
-  - make -j2 VERBOSE=1
+  - make -j2
   - ctest -V
   - ./bin/runcppproject
 

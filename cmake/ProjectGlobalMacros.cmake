@@ -88,8 +88,9 @@ macro(project_enable_coverage_build)
   endif()
 endmacro(project_enable_coverage_build)
 
-# Enable clang sanitizers builds
+# Enable sanitizers builds
 macro(project_enable_sanitizer_build)
+  configure_file(${PROJECT_SOURCE_DIR}/cmake/SanitizerBlacklist.txt.in ${PROJECT_BINARY_DIR}/SanitizerBlacklist.txt)
   if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     set(SAN ${PROJECT_BUILD_SANITIZER_TYPE})
     if (NOT ${SAN} STREQUAL "")
@@ -97,10 +98,23 @@ macro(project_enable_sanitizer_build)
           OR ${SAN} STREQUAL "memory"
           OR ${SAN} STREQUAL "thread"
           OR ${SAN} STREQUAL "undefined")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=${SAN} -fsanitize-blacklist=${PROJECT_BINARY_DIR}/SanitizerBlacklist.txt")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=${SAN} -fsanitize-blacklist=${PROJECT_BINARY_DIR}/SanitizerBlacklist.txt")
+      else()
+        message(FATAL_ERROR "Clang sanitizer ${SAN} is unknown.")
+      endif()
+    endif()
+  endif()
+  if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    set(SAN ${PROJECT_BUILD_SANITIZER_TYPE})
+    if (NOT ${SAN} STREQUAL "")
+      if (${SAN} STREQUAL "address"
+          OR ${SAN} STREQUAL "thread"
+          OR ${SAN} STREQUAL "undefined")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=${SAN}")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fsanitize=${SAN}")
       else()
-        message(FATAL_ERROR "Clang sanitizer ${SAN} is unknown.")
+        message(FATAL_ERROR "GCC sanitizer ${SAN} is unknown.")
       endif()
     endif()
   endif()
