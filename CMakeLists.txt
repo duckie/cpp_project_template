@@ -53,9 +53,12 @@ project_add_module(projectrun)
 # Tooling
 
 # Format the whole source code with clang-format
-file(GLOB_RECURSE srcs_to_format src/*.c src/*.cc src/*.cpp src/*.cxx)
-file(GLOB_RECURSE headers_to_format src/*.h src/*.hpp src/*.hxx)
-add_custom_target(format
-  clang-format -i ${srcs_to_format} ${headers_to_format}
-  VERBATIM
-)
+find_program(CLANG_FORMAT_EXE clang-format)
+if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
+  message("-- clang-format found, whole source formatting enabled through 'format' target.")
+  add_custom_target(format
+    COMMAND find -path ./.git -prune -o -path ./3rdparty -prune -o -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    VERBATIM
+  )
+endif()
