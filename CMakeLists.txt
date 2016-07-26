@@ -11,6 +11,7 @@ include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(ProjectGlobalMacros)
+include(ProjectTestFunctions)
 
 # Project configuration
 project (cppproject)
@@ -57,7 +58,7 @@ find_program(CLANG_FORMAT_EXE clang-format)
 if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
   message("-- clang-format found, whole source formatting enabled through 'format' target.")
   add_custom_target(format
-    COMMAND find -path ./.git -prune -o -path ./3rdparty -prune -o -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
+    COMMAND find ./src -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     VERBATIM
   )

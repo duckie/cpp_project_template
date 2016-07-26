@@ -29,6 +29,7 @@ macro(project_check_cpp_version)
   endif()
 endmacro(project_check_cpp_version)
 
+# Enable memory checks for people using bizarre ctest builds
 macro(project_enable_memcheck)
   if (NOT MSVC)
     find_program(MEMORYCHECK_COMMAND valgrind)
@@ -37,7 +38,6 @@ macro(project_enable_memcheck)
   else()
   endif()
 endmacro(project_enable_memcheck)
-
 
 # Add 3rdparty for main file
 macro(project_add_3rdparty name)
