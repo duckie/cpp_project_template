@@ -437,7 +437,7 @@ epub_exclude_files = ['search.html']
 # epub_use_index = True
 
 # Execute doxygen
-process = subprocess.Popen(["doxygen","docs/doxygen/source/doxyfile.conf"],cwd="../../../")
+process = subprocess.Popen(["doxygen","docs/doxygen/source/doxyxml.conf"],cwd="../../../")
 process.wait()
 if process.returncode != 0:
     print("Doxygen failed to run properly.")
