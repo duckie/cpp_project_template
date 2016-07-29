@@ -25,6 +25,8 @@ import os, subprocess, sys
 
 # -- General configuration ------------------------------------------------
 
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
 # If your documentation needs a minimal Sphinx version, state it here.
 #
 # needs_sphinx = '1.0'
@@ -37,9 +39,11 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
     'breathe',
 ]
+
+if not read_the_docs_build:
+    extensions.append('sphinx.ext.githubpages')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -433,8 +437,6 @@ epub_exclude_files = ['search.html']
 # epub_use_index = True
 
 # Execute doxygen
-#read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
-#if read_the_docs_build:
 process = subprocess.Popen(["doxygen","docs/doxygen/source/doxyfile.conf"],cwd="../../../")
 process.wait()
 if process.returncode != 0:
