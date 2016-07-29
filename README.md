@@ -4,6 +4,7 @@ C++ project template
 [![Travis CI Build Status](https://api.travis-ci.org/duckie/cpp_project_template.svg?branch=master)](https://travis-ci.org/duckie/cpp_project_template)
 [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/ik18h87j8fg6s968?svg=true)](https://ci.appveyor.com/project/duckie/cpp-project-template)
 [![codecov.io](http://codecov.io/github/duckie/cpp_project_template/coverage.svg?branch=master)](http://codecov.io/github/duckie/cpp_project_template?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/cpp-project-template/badge/?version=latest)](http://cpp-project-template.readthedocs.io/en/latest/?badge=latest)
 
 
 
