@@ -35,13 +35,13 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
     'breathe',
 ]
 
-#'sphinx.ext.autodoc',
-#'sphinx.ext.coverage',
-#'sphinx.ext.mathjax',
-#'sphinx.ext.viewcode',
 #if not read_the_docs_build:
     #extensions.append('sphinx.ext.githubpages')
 
