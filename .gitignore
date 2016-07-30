@@ -1,4 +1,6 @@
 **.pyc
 **.pyo
 BuildConfig.json
-build/
+/build/
+/docs/doxygen/build/
+/docs/sphinx/build/
