@@ -92,6 +92,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
           packages:
+            - g++-5
             - clang-3.8
       env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="thread"
     #
@@ -102,6 +103,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
           packages:
+            - g++-5
             - clang-3.8
       env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="undefined"
 
@@ -143,7 +145,6 @@ install:
     fi
 
 before_script:
-  - ls /usr/include/c++
   - export CC=${C_COMPILER}
   - export CXX=${CXX_COMPILER}
   - cd ${TRAVIS_BUILD_DIR}
