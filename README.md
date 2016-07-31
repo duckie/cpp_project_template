@@ -22,6 +22,7 @@ Tooling includes:
 * Code formatting with `clang-format`
 * Cloud continuous integration
 * Sanitizers builds
+* Documentation generation with [Doxygen](http://doxygen.org) and [Sphinx](http://www.sphinx-doc.org)+[Breathe](http://breathe.readthedocs.io).
 
 To compile and launch :
 

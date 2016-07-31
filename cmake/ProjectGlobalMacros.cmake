@@ -1,3 +1,13 @@
+# Feature detection
+find_program(MEMORYCHECK_COMMAND valgrind)
+find_program(GCOV_EXE gcov)
+find_program(LCOV_EXE lcov)
+find_program(GENHTML_EXE genhtml)
+find_program(CLANG_FORMAT_EXE clang-format)
+find_package(PythonInterp)
+find_program(MAKE_EXE make)
+find_program(DOXYGEN_EXE doxygen)
+
 # Check C++ version
 macro(project_check_cpp_version)
   if (NOT MSVC)
@@ -32,7 +42,6 @@ endmacro(project_check_cpp_version)
 # Enable memory checks for people using bizarre ctest builds
 macro(project_enable_memcheck)
   if (NOT MSVC)
-    find_program(MEMORYCHECK_COMMAND valgrind)
     set(MEMORYCHECK_COMMAND_OPTIONS "--trace-children=yes --leak-check=full")
     set(MEMORYCHECK_SUPPRESSIONS_FILE "${PROJECT_SOURCE_DIR}/.valgrind_suppress.txt")
   else()
@@ -60,7 +69,6 @@ macro(project_enable_coverage_build)
 
     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Coverage")
       # gcov
-      find_program(GCOV_EXE gcov)
       if (NOT ${GCOV_EXE} STREQUAL GCOV_EXE-NOTFOUND)
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/gcov)
         message("-- gcov found, coverage reports available through target 'gcov'")
@@ -72,8 +80,6 @@ macro(project_enable_coverage_build)
       endif()
 
       # lcov
-      find_program(LCOV_EXE lcov)
-      find_program(GENHTML_EXE genhtml)
       if (NOT ${LCOV_EXE} STREQUAL LCOV_EXE-NOTFOUND AND NOT ${GENHTML_EXE} STREQUAL GENHTML_EXE-NOTFOUND)
         message("-- lcov and genhtml found, html reports available through target 'lcov'")
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/lcov/html)
@@ -119,3 +125,43 @@ macro(project_enable_sanitizer_build)
     endif()
   endif()
 endmacro(project_enable_sanitizer_build)
+
+# Format the whole source code with clang-format
+macro(project_enable_clang_format)
+if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
+  message("-- clang-format found, whole source formatting enabled through 'format' target.")
+  add_custom_target(format
+    COMMAND find ./src -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    VERBATIM
+  )
+endif()
+endmacro(project_enable_clang_format)
+
+# Format the whole source code with clang-format
+macro(project_enable_documentation)
+  add_custom_target(docs)
+  if(NOT ${DOXYGEN_EXE} STREQUAL "DOXYGEN_EXE-NOTFOUND")
+    message("-- Doxygen found, targets 'docs-doxygen-html' and 'docs-doxygen-xml' enabled.")
+    add_custom_target(docs-doxygen-xml
+      COMMAND ${DOXYGEN_EXE} docs/doxygen/source/doxyxml.conf
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    )
+    add_custom_target(docs-doxygen-html
+      COMMAND ${DOXYGEN_EXE} docs/doxygen/source/doxyhtml.conf
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    )
+    # Dependency to XML will be added by sphinx, not the default
+    add_dependencies(docs docs-doxygen-html)
+
+    if (PYTHONINTERP_FOUND AND NOT ${MAKE_EXE} STREQUAL "MAKE_EXE-NOTFOUND")
+      message("-- Python, doxygen and make found, target 'docs-sphinx' enabled.")
+      add_custom_target(docs-sphinx
+        DEPENDS docs-doxygen-xml
+        COMMAND ${MAKE_EXE} html
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs/sphinx
+      )
+      add_dependencies(docs docs-sphinx)
+    endif()
+  endif()
+endmacro(project_enable_documentation)

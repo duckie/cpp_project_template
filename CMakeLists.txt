@@ -33,9 +33,14 @@ project_check_cpp_version()
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_DIR}/BuildConfig.json)
 
-# Add flags for coverage and sanitizing
+# Tooling - some must be declared before adding other subdirectories
 project_enable_coverage_build()
 project_enable_sanitizer_build()
+project_enable_clang_format()
+project_enable_documentation()
+
+# Generate configuration
+
 
 ### MANUAL_INCLUDE_DIRS is useful to force ides to find some includes (useless for compilation) ###
 ### To be used by editing the cache manually
@@ -50,16 +55,3 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 project_add_module(testlib)
 project_add_module(projectlib)
 project_add_module(projectrun)
-
-# Tooling
-
-# Format the whole source code with clang-format
-find_program(CLANG_FORMAT_EXE clang-format)
-if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
-  message("-- clang-format found, whole source formatting enabled through 'format' target.")
-  add_custom_target(format
-    COMMAND find ./src -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    VERBATIM
-  )
-endif()
