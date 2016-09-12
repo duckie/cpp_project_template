@@ -53,7 +53,7 @@ Where `sanitizer_type` is either `address`, `memory` or `thread`.
 
 ### Prefixing tests
 
-A function called `project_add_test` has the exact same signature than the built-in `add_test`. Tests added with are prefixed before launch the content of the `PROJECT_TEST_COMMANDS_PREFIX` variable. Example:
+A function called `project_add_test` has the exact same signature than the built-in `add_test`. Tests added with it are prefixed before launch with the content of the `PROJECT_TEST_COMMANDS_PREFIX` variable. Example:
 
 
 ```bash
