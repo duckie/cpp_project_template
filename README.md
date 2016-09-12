@@ -22,9 +22,12 @@ Tooling includes:
 * Code formatting with `clang-format`
 * Cloud continuous integration
 * Sanitizers builds
+* A trick to prefix every test executable with your own command, with arguments if you want (ex: `valgrind --leak-check=full`) without using the strange CMake Dart thing.
 * Documentation generation with [Doxygen](http://doxygen.org) and [Sphinx](http://www.sphinx-doc.org)+[Breathe](http://breathe.readthedocs.io).
 
-To compile and launch :
+This project is distributed under the [MIT license](https://opensource.org/licenses/MIT).
+
+### Simple compilation
 
 ```bash
 mkdir build
@@ -35,4 +38,23 @@ ctest
 ./bin/runcppproject
 ```
 
-This project is distributed under the [MIT license](https://opensource.org/licenses/MIT).
+The cmake output will prompt about detected tools and availabe targets to use them.
+
+### Sanitizer builds
+
+To make a sanitizer build, customize `cmake/SanitizerBlacklist.txt.in` at your will then
+
+```bash
+cmake ../ -DPROJECT_BUILD_SANITIZER_TYPE=${sanitizer_type}
+```
+
+Where `sanitizer_type` is either `address`, `memory` or `thread`.
+
+### Prefixing tests
+
+A function called `project_add_test` has the exact same signature than the built-in `add_test`. Tests added with are prefixed before launch the content of the `PROJECT_TEST_COMMANDS_PREFIX` variable. Example:
+
+
+```bash
+cmake ../ -DPROJECT_TEST_COMMANDS_PREFIX="valgrind --leak-check=full"
+```
