@@ -18,6 +18,7 @@ The actual source has three modules:
 Non system third parties are supposed to be stored or referenced (either via copy, submodule or _CMake_ external project) in the `3rdparty` directory. System third parties may be referenced to directly with _CMake_ modules.
 
 Tooling includes:
+* Automatic configuration for [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 * Code coverage with `gcov` and `lcov`
 * Code formatting with `clang-format`
 * Cloud continuous integration
