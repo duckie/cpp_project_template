@@ -1,72 +1,65 @@
 language: c++
 sudo: required
 dist: trusty
-env:
-  global: []
-  matrix:
-    - BUILD_TYPE='Release' SANITIZER=""
-    - BUILD_TYPE='Debug' SANITIZER=""
-    - BUILD_TYPE='Coverage' SANITIZER=""
-    - BUILD_TYPE='Debug' SANITIZER="address"
-    - BUILD_TYPE='Debug' SANITIZER="thread"
-    #- BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="-fuse-ld=gold" # False positive on linux, not supported to link on OS X
-    - BUILD_TYPE='Debug' SANITIZER="undefined"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.8
+    packages:
+      - g++-5
+      - clang-3.8
+      - binutils
 
 matrix:
   include:
     # Linux GCC Builds
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
-            - binutils
-      env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold"
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER=""
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Coverage' SANITIZER=""
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER=""
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address"
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold -pie" BUILD_TYPE='Debug' SANITIZER="thread"
+    #- env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory"
+    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined"
  
     # Linux Clang Builds
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-          packages:
-            - g++-5
-            - clang-3.8
-            - binutils
-      env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold"
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER=""
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER=""
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address"
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="thread"
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory"
+    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined"
 
     # OSX Clang Builds
     - os: osx
       osx_image: xcode8
-      compiler: clang
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS=""
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Release' SANITIZER=""
+    - os: osx
+      osx_image: xcode8
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER=""
+    - os: osx
+      osx_image: xcode8
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="address"
+    - os: osx
+      osx_image: xcode8
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="thread"
+    - os: osx
+      osx_image: xcode8
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="memory"
+    - os: osx
+      osx_image: xcode8
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="undefined"
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - |
-    if [[ $COMPILER_ID == gcc && $SANITIZER == memory ]]; then
-      echo "Memory sanitizer not supported on GCC"
-      exit 0
-    fi
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      cmake --version
-      if [[ $COMPILER_ID == gcc && $SANITIZER == thread ]]; then
-        echo "Thread sanitizer disabled on Linux GCC because of missing libtsan"
-        exit 0
-      fi
       echo
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       # Seems already installed now
       # brew install cmake
       cmake --version
-      if [[ $COMPILER_ID == clang && $SANITIZER == undefined ]]; then
-        echo "Undefined behavior sanitizer is disabled on OSX cause it fails at link time."
-        exit 0
-      fi
     fi
 
 before_script:
