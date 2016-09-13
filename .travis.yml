@@ -14,41 +14,29 @@ addons:
 matrix:
   include:
     # Linux GCC Builds
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER=""
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Coverage' SANITIZER=""
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER=""
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address"
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold -pie" BUILD_TYPE='Debug' SANITIZER="thread"
-    #- env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory"
-    - env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined"
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER="" }
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Coverage' SANITIZER="" }
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="" }
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address" }
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold -pie -fPIC" BUILD_TYPE='Debug' SANITIZER="thread" }
+    #- { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory" # Not supported
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined" }
  
     # Linux Clang Builds
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER=""
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER=""
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address"
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="thread"
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory"
-    - env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined"
+    - { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Release' SANITIZER="" }
+    - { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="" }
+    - { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address" }
+    - { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="thread" }
+    #- { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory" } # False positive
+    - { compiler: clang, env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined" }
 
     # OSX Clang Builds
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Release' SANITIZER=""
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER=""
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="address"
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="thread"
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="memory"
-    - os: osx
-      osx_image: xcode8
-      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="undefined"
+    - { os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Release' SANITIZER="" }
+    - { os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="" }
+    - {os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="address" }
+    - {os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="thread" }
+    #- {os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="memory" } # Not supported on osx clang
+    #- {os: osx, osx_image: xcode8, env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS="" BUILD_TYPE='Debug' SANITIZER="undefined" } # Missing libclang_rt
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
