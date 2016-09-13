@@ -49,7 +49,7 @@ To make a sanitizer build, customize `cmake/SanitizerBlacklist.txt.in` at your w
 cmake ../ -DPROJECT_BUILD_SANITIZER_TYPE=${sanitizer_type}
 ```
 
-Where `sanitizer_type` is either `address`, `memory` or `thread`.
+Where `sanitizer_type` is either `address`, `memory`, `thread` or `undefined`.
 
 ### Prefixing tests
 
