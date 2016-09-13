@@ -1,6 +1,14 @@
 language: c++
 sudo: required
 dist: trusty
+env:
+  - BUILD_TYPE='Release' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  - BUILD_TYPE='Debug' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  - BUILD_TYPE='Coverage' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  - BUILD_TYPE='Debug' SANITIZER="address" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  - BUILD_TYPE='Debug' SANITIZER="thread" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  #- BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="-fuse-ld=gold" # False positive on linux, not supported to link on OS X
+  - BUILD_TYPE='Debug' SANITIZER="undefined" ADDITIONAL_FLAGS="-fuse-ld=gold"
 
 matrix:
   include:
@@ -13,13 +21,7 @@ matrix:
           packages:
             - g++-5
             - binutils
-      env:
-        - C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Release' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Coverage' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="address" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        #- C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="thread" ADDITIONAL_FLAGS="-fuse-ld=gold" # Libtsan is missing
-        - C_COMPILER=gcc-5 CXX_COMPILER=g++-5 BUILD_TYPE='Debug' SANITIZER="undefined" ADDITIONAL_FLAGS="-fuse-ld=gold"
+      env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold"
  
     # Linux Clang Builds
     - compiler: clang
@@ -32,36 +34,37 @@ matrix:
             - g++-5
             - clang-3.8
             - binutils
-      env:
-        - C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Release' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="address" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        #- C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="-fuse-ld=gold" # Disabled for now because of false positive and failing blacklist
-        - C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="thread" ADDITIONAL_FLAGS="-fuse-ld=gold"
-        - C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 BUILD_TYPE='Debug' SANITIZER="undefined" ADDITIONAL_FLAGS="-fuse-ld=gold"
+      env: C_COMPILER=clang-3.8 CXX_COMPILER=clang++-3.8 COMPILER_ID=clang ADDITIONAL_FLAGS="-fuse-ld=gold"
 
     # OSX Clang Builds
     - os: osx
       osx_image: xcode8
       compiler: clang
-      env:
-        - C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Release' SANITIZER="" ADDITIONAL_FLAGS=""
-        - C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="" ADDITIONAL_FLAGS=""
-        - C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="address" ADDITIONAL_FLAGS=""
-        #- C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="" # Currently unsupported
-        - C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="thread" ADDITIONAL_FLAGS=""
-        #- C_COMPILER=clang CXX_COMPILER='clang++' BUILD_TYPE='Debug' SANITIZER="undefined" ADDITIONAL_FLAGS="" # Fails at link
+      env: C_COMPILER=clang CXX_COMPILER='clang++' COMPILER_ID=clang ADDITIONAL_FLAGS=""
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
   - |
+    if [[ $COMPILER_ID == gcc && $SANITIZER == memory ]]; then
+      echo "Memory sanitizer not supported on GCC"
+      exit 0
+    fi
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      echo "Nothin"
+      cmake --version
+      if [[ $COMPILER_ID == gcc && $SANITIZER == thread ]]; then
+        echo "Thread sanitizer disabled on Linux GCC because of missing libtsan"
+        exit 0
+      fi
+      echo
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       # Seems already installed now
       # brew install cmake
       cmake --version
+      if [[ $COMPILER_ID == clang && $SANITIZER == undefined ]]; then
+        echo "Undefined behavior sanitizer is disabled on OSX cause it fails at link time."
+        exit 0
+      fi
     fi
 
 before_script:
