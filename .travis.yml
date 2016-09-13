@@ -150,7 +150,8 @@ install:
       echo "Nothin"
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       # Seems already installed now
-      #brew install cmake
+      # brew install cmake
+      cmake --version
     fi
 
 before_script:
