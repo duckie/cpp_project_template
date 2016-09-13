@@ -2,13 +2,15 @@ language: c++
 sudo: required
 dist: trusty
 env:
-  - BUILD_TYPE='Release' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-  - BUILD_TYPE='Debug' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-  - BUILD_TYPE='Coverage' SANITIZER="" ADDITIONAL_FLAGS="-fuse-ld=gold"
-  - BUILD_TYPE='Debug' SANITIZER="address" ADDITIONAL_FLAGS="-fuse-ld=gold"
-  - BUILD_TYPE='Debug' SANITIZER="thread" ADDITIONAL_FLAGS="-fuse-ld=gold"
-  #- BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="-fuse-ld=gold" # False positive on linux, not supported to link on OS X
-  - BUILD_TYPE='Debug' SANITIZER="undefined" ADDITIONAL_FLAGS="-fuse-ld=gold"
+  global: []
+  matrix:
+    - BUILD_TYPE='Release' SANITIZER=""
+    - BUILD_TYPE='Debug' SANITIZER=""
+    - BUILD_TYPE='Coverage' SANITIZER=""
+    - BUILD_TYPE='Debug' SANITIZER="address"
+    - BUILD_TYPE='Debug' SANITIZER="thread"
+    #- BUILD_TYPE='Debug' SANITIZER="memory" ADDITIONAL_FLAGS="-fuse-ld=gold" # False positive on linux, not supported to link on OS X
+    - BUILD_TYPE='Debug' SANITIZER="undefined"
 
 matrix:
   include:
