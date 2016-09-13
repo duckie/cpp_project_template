@@ -18,7 +18,7 @@ matrix:
     - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Coverage' SANITIZER="" }
     - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="" }
     - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="address" }
-    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold -pie -fPIC" BUILD_TYPE='Debug' SANITIZER="thread" }
+    - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold -fPIC" BUILD_TYPE='Debug' SANITIZER="thread" }
     #- { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="memory" # Not supported
     - { compiler: gcc, env: C_COMPILER=gcc-5 CXX_COMPILER=g++-5 COMPILER_ID=gcc ADDITIONAL_FLAGS="-fuse-ld=gold" BUILD_TYPE='Debug' SANITIZER="undefined" }
  
