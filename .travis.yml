@@ -149,7 +149,8 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       echo "Nothin"
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-      brew install cmake
+      # Seems already installed now
+      #brew install cmake
     fi
 
 before_script:
