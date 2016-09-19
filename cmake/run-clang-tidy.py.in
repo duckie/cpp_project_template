@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import os, sys, json, subprocess, signal
+
+
+# Exits on Ctrl + C
+def signal_handler(sig,frame):
+    sys.exit(128 + signal.SIGINT)
+signal.signal(signal.SIGINT, signal_handler)
+
+binary_dir="${PROJECT_BINARY_DIR}"
+clang_tidy="${CLANG_TIDY_EXE}"
+input_file = binary_dir + "/compile_commands.json"
+input_fd = open(input_file)
+json_data = json.load(input_fd)
+
+for compile_command in json_data:
+    command = [clang_tidy] + sys.argv[1:]
+    command.append(compile_command["file"])
+    command.append("--")
+    args = compile_command["command"].split(" ")
+    for arg in args:
+        if arg[:2] == "-I" or arg[:2] == "-D":
+            command.append(arg)
+    process = subprocess.Popen(command,shell=False)
+    process.wait()
+    if process.returncode == 128 + signal.SIGINT:
+        break

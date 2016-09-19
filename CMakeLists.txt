@@ -37,6 +37,7 @@ configure_file(${PROJECT_SOURCE_DIR}/cmake/BuildConfig.json.in ${PROJECT_SOURCE_
 project_enable_coverage_build()
 project_enable_sanitizer_build()
 project_enable_clang_format()
+project_enable_clang_tidy()
 project_enable_documentation()
 
 # Generate configuration

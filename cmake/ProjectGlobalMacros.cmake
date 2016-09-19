@@ -4,6 +4,7 @@ find_program(GCOV_EXE gcov)
 find_program(LCOV_EXE lcov)
 find_program(GENHTML_EXE genhtml)
 find_program(CLANG_FORMAT_EXE clang-format)
+find_program(CLANG_TIDY_EXE clang-tidy)
 find_package(PythonInterp)
 find_program(MAKE_EXE make)
 find_program(DOXYGEN_EXE doxygen)
@@ -128,15 +129,23 @@ endmacro(project_enable_sanitizer_build)
 
 # Format the whole source code with clang-format
 macro(project_enable_clang_format)
-if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
-  message("-- clang-format found, whole source formatting enabled through 'format' target.")
-  add_custom_target(format
-    COMMAND find ./src -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    VERBATIM
-  )
-endif()
+  if (NOT ${CLANG_FORMAT_EXE} STREQUAL "CLANG_FORMAT_EXE-NOTFOUND")
+    message("-- clang-format found, whole source formatting enabled through 'format' target.")
+    add_custom_target(format
+      COMMAND find ./src -type f -regex .*\\.h\\\|.*\\.hpp\\\|.*\\.hxx\\\|.*\\.c\\\|.*\\.cpp\\\|.*\\.cxx\\\|.*\\.cc -exec clang-format -i {} \;
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+      VERBATIM
+    )
+  endif()
 endmacro(project_enable_clang_format)
+
+
+macro(project_enable_clang_tidy)
+  if (NOT ${CLANG_TIDY_EXE} STREQUAL "CLANG_TIDY_EXE-NOTFOUND")
+    message("-- clang-tidy found, script 'run-clang-tidy' available in build directory.")
+    configure_file(${PROJECT_SOURCE_DIR}/cmake/run-clang-tidy.py.in ${PROJECT_BINARY_DIR}/run-clang-tidy.py)
+  endif()
+endmacro(project_enable_clang_tidy)
 
 # Format the whole source code with clang-format
 macro(project_enable_documentation)

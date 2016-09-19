@@ -21,6 +21,7 @@ Tooling includes:
 * Automatic configuration for [YouCompleteMe](https://github.com/Valloric/YouCompleteMe)
 * Code coverage with `gcov` and `lcov`
 * Code formatting with `clang-format`
+* Code checking with `clang-tidy`
 * Cloud continuous integration
 * Sanitizers builds
 * A trick to prefix every test executable with your own command, with arguments if you want (ex: `valgrind --leak-check=full`) without using the strange CMake Dart thing.
@@ -40,6 +41,21 @@ ctest
 ```
 
 The cmake output will prompt about detected tools and availabe targets to use them.
+
+
+### clang-tidy
+
+To execute `clang-tidy` on every file compiled by the project, from the build dir :
+
+```bash
+./run-clang-tidy.py
+```
+
+It will execute `clang-tidy` with the same `-I` and `-D` options from your CMake files. Any additional argument passed to the script is forwarded. Example:
+
+```bash
+./run-clang-tidy.py -checks=*
+```
 
 ### Sanitizer builds
 
