@@ -87,8 +87,8 @@ macro(project_enable_coverage_build)
         message("-- lcov and genhtml found, html reports available through target 'lcov'")
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/lcov/html)
         add_custom_target(lcov
-          COMMAND lcov --capture --directory ${PROJECT_BINARY_DIR} --output-file coverage.info
-          COMMAND genhtml coverage.info --output-directory html
+          COMMAND lcov --no-external --capture --directory ${PROJECT_BINARY_DIR} --output-file coverage.info
+          COMMAND genhtml coverage.info --output-directory html --demangle-cpp
           COMMAND echo "HTML report generated in: " ${PROJECT_BINARY_DIR}/coverage/lcov/html
           WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/coverage/lcov
           )
