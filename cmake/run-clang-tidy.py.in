@@ -16,12 +16,9 @@ json_data = json.load(input_fd)
 
 for compile_command in json_data:
     command = [clang_tidy] + sys.argv[1:]
+    command.append("-p")
+    command.append(binary_dir)
     command.append(compile_command["file"])
-    command.append("--")
-    args = compile_command["command"].split(" ")
-    for arg in args:
-        if arg[:2] == "-I" or arg[:2] == "-D":
-            command.append(arg)
     process = subprocess.Popen(command,shell=False)
     process.wait()
     if process.returncode == 128 + signal.SIGINT:
